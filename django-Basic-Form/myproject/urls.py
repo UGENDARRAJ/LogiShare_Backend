@@ -19,8 +19,9 @@ from django.urls import path
 from product import views
 
 urlpatterns = [
-    path('',views.addData, name="addData"),
+    # path('',views.addData, name="addData"),
     path('admin/',admin.site.urls),
-    # path('addData',views.addData, name="addData"),
+    path('shipment/',views.addData),
+    path('login/',views.login),
     path('updateData/<int:id>',views.updateData, name="updateData"),
 ]

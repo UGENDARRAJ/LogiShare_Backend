@@ -29,6 +29,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+ALLOWED_ORIGINS = [
+    "http://localhost:50162"
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'product',
-    'corsheaders'
+    'corsheaders',
       
 ]
 

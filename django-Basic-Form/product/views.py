@@ -2,6 +2,7 @@ from django.shortcuts import render
 import json
 from django.http import JsonResponse
 from .models import Customer, Shipper, Shipment
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
     mydata=Shipment.objects.all()
@@ -9,16 +10,17 @@ def home(request):
         return render(request,'home.html', {'datas':mydata})
     else:
         return render(request,'home.html')
-
+@csrf_exempt
 def addData(request): 
     if request.method == 'POST':
-        type=request.POST['type']
-        length=request.POST['length']
-        width=request.POST['width']
-        height=request.POST['height']
-        quantity=request.POST['quantity']
-        pickup=request.POST['pickup']
-        drop=request.POST['drop']
+        data = json.loads(request.body)
+        type=data.get('type')
+        length=data.get('length')
+        width=data.get('width')
+        height=data.get('height')
+        quantity=data.get('quantity')
+        pickup=data.get('pickup')
+        drop=data.get('drop')
 
         obj=Shipment()
         obj.Type=type
@@ -30,20 +32,23 @@ def addData(request):
         obj.Drop = drop
         obj.save()
         mydata = Shipment.objects.all()
-        return render(request,'home.html', {'datas':mydata})
-    return render(request,'home.html')
+        for sp in mydata:
+            print(sp.Type, sp.Drop)
+            
+        return JsonResponse({}, status=201)
+    else:
+        return JsonResponse({'error':"Sucess"}, status=405)
 
 def updateData(request, id):
     mydata=Shipment.objects.get(id=id)
     return render(request, 'update.html', {'data':mydata})
 
-
+@csrf_exempt
 def login(request):
-    if request.method == 'OPTIONS':
-        return JsonResponse({'message': 'Login successful'}, status=200)
-    elif request.method == 'POST':
+    
+    if request.method == 'POST':
         data = json.loads(request.body)
-        username = data.get('phno')
+        username = data.get('username')
         password = data.get('password')
         
         #user = authenticate(username=username, password=password)

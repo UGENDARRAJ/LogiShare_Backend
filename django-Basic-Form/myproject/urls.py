@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/',admin.site.urls),
     path('shipment/',views.addData),
     path('login/',views.login),
+    path('sendlisting/',views.sendListing),
+    path('searchshipment/',views.filterShipment),
     path('updateData/<int:id>',views.updateData, name="updateData"),
 ]

@@ -11,6 +11,26 @@ def home(request):
     else:
         return render(request,'home.html')
 @csrf_exempt
+def sendListing(request):
+    if request.method == 'GET':
+        return JsonResponse({'shipmentID': "1",
+                            'pickupLocation' : Shipment.objects.get(id=1).Pickup,
+                            'deliveryLocation':Shipment.objects.get(id=1).Drop,
+                            'shipmentWeight':str(Shipment.objects.get(id=1).Weight),
+                            'itemName':Shipment.objects.get(id=1).Type}, status=200)
+
+@csrf_exempt
+def filterShipment(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        pickup = data.get('pickup')
+        delivery = data.get('delivery')
+
+        shipments = Shipment.objects.filter(Pickup = pickup).filter(Drop = delivery)
+        data = list(shipments.values())
+        return JsonResponse({'data': data}, status=200)
+
+@csrf_exempt
 def addData(request): 
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -41,6 +61,7 @@ def addData(request):
 
 def updateData(request, id):
     mydata=Shipment.objects.get(id=id)
+
     return render(request, 'update.html', {'data':mydata})
 
 @csrf_exempt
@@ -61,6 +82,19 @@ def login(request):
         """
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+
+
+
+
+def find_shipments():
+    shipments = Shipment.objects.all()
+  
+    
+        
+    print("Query results:", list(shipments))
+
+   
 def cust_register(request):
     if request.method == 'POST':
         #this wont work
